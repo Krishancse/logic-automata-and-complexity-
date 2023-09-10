@@ -1,0 +1,72 @@
+import tkinter as tk
+from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import random
+import matplotlib.animation as animation
+
+# Function to generate random data
+def generate_random_data(num_points, max_value):
+    return [random.randint(1, max_value) for _ in range(num_points)]
+
+# Function to visualize the selected algorithm
+def visualize_algorithm():
+    selected_algorithm = algorithm_combobox.get()
+    num_points = int(num_points_entry.get())
+    max_value = int(max_value_entry.get())
+
+    data = generate_random_data(num_points, max_value)
+
+    fig, ax = plt.subplots()
+    x_data = list(range(1, num_points + 1))
+    y_data = []
+
+    line, = ax.plot(x_data, y_data)
+
+    def animate(i):
+        y_data.append(data[i])
+        line.set_data(x_data[:i+1], y_data)
+        return line,
+
+    num_frames = len(data)
+    ani = animation.FuncAnimation(fig, animate, frames=num_frames, interval=100)
+
+    ax.set_xlabel("Data Point")
+    ax.set_ylabel("Value")
+    ax.set_title(f"Algorithm Visualization: {selected_algorithm}")
+
+    canvas = FigureCanvasTkAgg(fig, master=visualization_frame)
+    canvas.get_tk_widget().pack()
+    canvas.draw()
+
+# Create the main application window
+root = tk.Tk()
+root.title("Algorithm Visualization Tool")
+
+# Algorithm selection
+algorithm_label = tk.Label(root, text="Select Algorithm:")
+algorithm_label.pack()
+algorithms = ["Algorithm 1", "Algorithm 2", "Algorithm 3"]  # Add more algorithms as needed
+algorithm_combobox = ttk.Combobox(root, values=algorithms)
+algorithm_combobox.pack()
+
+# Input data settings
+num_points_label = tk.Label(root, text="Number of Data Points:")
+num_points_label.pack()
+num_points_entry = tk.Entry(root)
+num_points_entry.pack()
+
+max_value_label = tk.Label(root, text="Maximum Value:")
+max_value_label.pack()
+max_value_entry = tk.Entry(root)
+max_value_entry.pack()
+
+# Start button
+start_button = tk.Button(root, text="Start Visualization", command=visualize_algorithm)
+start_button.pack()
+
+# Frame for visualization
+visualization_frame = tk.Frame(root)
+visualization_frame.pack()
+
+root.mainloop()
