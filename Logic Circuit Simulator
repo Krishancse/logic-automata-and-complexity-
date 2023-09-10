@@ -1,0 +1,90 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class LogicCircuitSimulator {
+    private JFrame frame;
+    private JPanel inputPanel;
+    private JButton simulateButton;
+    private JLabel resultLabel;
+    private JTextField numInputsField;
+    private JCheckBox[] inputCheckBoxes;
+
+    public LogicCircuitSimulator() {
+        frame = new JFrame("Logic Circuit Simulator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 200);
+
+        inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+
+        numInputsField = new JTextField(10);
+        simulateButton = new JButton("Simulate");
+        resultLabel = new JLabel();
+
+        simulateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulateLogicCircuit();
+            }
+        });
+
+        inputPanel.add(new JLabel("Enter the number of inputs:"));
+        inputPanel.add(numInputsField);
+        inputPanel.add(simulateButton);
+        frame.getContentPane().add(inputPanel, BorderLayout.NORTH);
+
+        frame.getContentPane().add(resultLabel, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
+
+    private void simulateLogicCircuit() {
+        int numInputs = Integer.parseInt(numInputsField.getText());
+        boolean[] inputs = new boolean[numInputs];
+
+        if (inputCheckBoxes != null) {
+            inputPanel.remove(inputCheckBoxesPanel);
+        }
+
+        inputCheckBoxesPanel = new JPanel();
+        inputCheckBoxes = new JCheckBox[numInputs];
+        inputCheckBoxesPanel.add(new JLabel("Enter input values:"));
+
+        for (int i = 0; i < numInputs; i++) {
+            inputCheckBoxes[i] = new JCheckBox("Input " + (i + 1));
+            inputCheckBoxesPanel.add(inputCheckBoxes[i]);
+        }
+
+        inputPanel.add(inputCheckBoxesPanel);
+        frame.revalidate();
+
+        int option = JOptionPane.showConfirmDialog(null, inputPanel, "Enter Input Values", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            for (int i = 0; i < numInputs; i++) {
+                inputs[i] = inputCheckBoxes[i].isSelected();
+            }
+            boolean output = performLogicGateSimulation(inputs);
+            resultLabel.setText("Output: " + output);
+        }
+    }
+
+    public static boolean performLogicGateSimulation(boolean[] inputs) {
+        boolean result = true; // Initialize result to true for AND gate
+
+        for (boolean input : inputs) {
+            result = result && input; // Perform AND operation
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new LogicCircuitSimulator();
+            }
+        });
+    }
+}
