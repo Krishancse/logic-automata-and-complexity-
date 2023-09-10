@@ -1,0 +1,38 @@
+import java.util.regex.*;
+
+public class FormalLanguageParser {
+    public static void main(String[] args) {
+        // Define a regular expression pattern
+        String regex = "(a|b)*abb";
+        
+        // Input strings to test against the pattern
+        String[] testStrings = {
+            "abb",
+            "aabb",
+            "abababb",
+            "babaabbb",
+            "aababb",
+            "abab",
+            "ab",
+            "baababb"
+        };
+        
+        // Compile the regular expression pattern
+        Pattern pattern = Pattern.compile(regex);
+        
+        // Parse each test string
+        for (String testString : testStrings) {
+            // Create a matcher for the current test string
+            Matcher matcher = pattern.matcher(testString);
+            
+            // Check if the test string matches the pattern
+            if (matcher.matches()) {
+                // Output a message indicating a successful match
+                System.out.println("'" + testString + "' matches the pattern.");
+            } else {
+                // Output a message indicating no match
+                System.out.println("'" + testString + "' does not match the pattern.");
+            }
+        }
+    }
+}
