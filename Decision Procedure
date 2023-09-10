@@ -1,0 +1,96 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class DecisionProcedure {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Decision Procedure for Propositional Logic");
+        System.out.print("Enter a propositional logic formula: ");
+        String formula = scanner.nextLine();
+
+        try {
+            boolean isSatisfiable = checkSatisfiability(formula);
+
+            if (isSatisfiable) {
+                System.out.println("The formula is satisfiable.");
+            } else {
+                System.out.println("The formula is not satisfiable.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        scanner.close();
+    }
+
+    public static boolean checkSatisfiability(String formula) {
+        // Implement a basic decision procedure (e.g., check if it contains a contradiction)
+        // This is a highly simplified example and does not cover complex logics
+
+        formula = formula.replaceAll("\\s", ""); // Remove spaces
+        formula = formula.toLowerCase(); // Convert to lowercase for case-insensitive matching
+
+        if (containsContradiction(formula)) {
+            return false; // Formula contains a contradiction
+        }
+
+        return true; // Formula is satisfiable (for the basic example)
+    }
+
+    public static boolean containsContradiction(String formula) {
+        Stack<Boolean> stack = new Stack<>();
+
+        for (char c : formula.toCharArray()) {
+            if (c == '(') {
+                continue; // Ignore opening parentheses
+            } else if (c == ')') {
+                // Pop and evaluate until an opening parenthesis is encountered
+                boolean result = stack.pop();
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    char operator = stack.pop();
+                    boolean operand = stack.pop();
+                    result = evaluate(operator, operand, result);
+                }
+                if (stack.isEmpty()) {
+                    throw new IllegalArgumentException("Mismatched parentheses.");
+                }
+                stack.pop(); // Pop the opening parenthesis
+                stack.push(result); // Push the result back onto the stack
+            } else if (c == 't' || c == 'f') {
+                stack.push(c == 't'); // Push true or false onto the stack
+            } else if (c == '&' || c == '|') {
+                stack.push(c); // Push AND or OR operators onto the stack
+            } else {
+                throw new IllegalArgumentException("Invalid character: " + c);
+            }
+        }
+
+        // Ensure there are no unprocessed operators left on the stack
+        while (!stack.isEmpty()) {
+            char operator = stack.pop();
+            if (operator == '(') {
+                throw new IllegalArgumentException("Mismatched parentheses.");
+            }
+            if (stack.isEmpty() || stack.peek() == '(') {
+                throw new IllegalArgumentException("Invalid formula.");
+            }
+            boolean operand = stack.pop();
+            boolean result = evaluate(operator, operand, stack.pop());
+            stack.push(result);
+        }
+
+        // The final result on the stack is the overall result
+        return stack.pop();
+    }
+
+    public static boolean evaluate(char operator, boolean operand1, boolean operand2) {
+        if (operator == '&') {
+            return operand1 && operand2;
+        } else if (operator == '|') {
+            return operand1 || operand2;
+        } else {
+            throw new IllegalArgumentException("Invalid operator: " + operator);
+        }
+    }
+}
