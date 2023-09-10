@@ -1,0 +1,48 @@
+import java.util.Scanner;
+
+public class ComplexityAnalysisTool {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt the user for input size
+        System.out.println("Complexity Analysis Tool");
+        System.out.print("Enter the input size (n): ");
+
+        int n = scanner.nextInt(); // Read the user's input
+
+        // Measure the execution time of the algorithm
+        long startTime = System.nanoTime(); // Get the starting time in nanoseconds
+
+        // Replace this section with your actual algorithm to analyze
+        for (int i = 0; i < n; i++) {
+            // Perform some operation here (simulating the algorithm)
+            // You should replace this with your actual algorithm
+        }
+
+        long endTime = System.nanoTime(); // Get the ending time in nanoseconds
+        long elapsedTime = endTime - startTime; // Calculate the elapsed time in nanoseconds
+
+        // Display the elapsed time
+        System.out.println("Elapsed Time (nanoseconds): " + elapsedTime);
+
+        // Call the analyzeComplexity method to estimate the time complexity
+        analyzeComplexity(n, elapsedTime);
+
+        scanner.close(); // Close the scanner to release resources
+    }
+
+    public static void analyzeComplexity(int n, long elapsedTime) {
+        System.out.println("Complexity Analysis:");
+
+        // You can add more sophisticated analysis here based on observed patterns
+        // This example provides basic estimations
+
+        if (elapsedTime < n) {
+            System.out.println("The algorithm appears to be O(n).");
+        } else if (elapsedTime < n * n) {
+            System.out.println("The algorithm appears to be O(n^2).");
+        } else {
+            System.out.println("The algorithm's complexity is difficult to determine.");
+        }
+    }
+}
