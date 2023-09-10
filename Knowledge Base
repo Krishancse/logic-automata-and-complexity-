@@ -1,0 +1,66 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class KnowledgeBase {
+    private final Map<String, Boolean> facts = new HashMap<>();
+
+    public void tell(String fact, boolean value) {
+        facts.put(fact, value);
+    }
+
+    public boolean ask(String fact) {
+        return facts.getOrDefault(fact, false);
+    }
+}
+
+public class LogicAI {
+    public static void main(String[] args) {
+        KnowledgeBase kb = new KnowledgeBase();
+
+        // Tell the knowledge base some facts
+        kb.tell("A", true);
+        kb.tell("B", true);
+
+        // Define a rule: If A and B are true, then C is true
+        String rule = "C = A && B";
+
+        // Split the rule into antecedent (left-hand side) and consequent (right-hand side)
+        String[] parts = rule.split("=");
+        String antecedent = parts[0].trim();
+        String consequent = parts[1].trim();
+
+        // Evaluate the antecedent and apply modus ponens
+        boolean isAntecedentTrue = evaluateExpression(kb, antecedent);
+        if (isAntecedentTrue) {
+            kb.tell(consequent, true);
+            System.out.println("Inferred: " + consequent + " is true.");
+        } else {
+            System.out.println("Cannot infer: " + consequent + " is not necessarily true.");
+        }
+
+        // Ask the knowledge base
+        System.out.println("Is C true? " + kb.ask("C"));
+    }
+
+    // Function to evaluate logical expressions
+    private static boolean evaluateExpression(KnowledgeBase kb, String expression) {
+        // In this simple example, we assume logical AND (&&) as the operator
+        String[] variables = expression.split("&&");
+        List<Boolean> values = new ArrayList<>();
+
+        for (String variable : variables) {
+            boolean value = kb.ask(variable.trim());
+            values.add(value);
+        }
+
+        // Evaluate AND operation
+        boolean result = true;
+        for (boolean value : values) {
+            result = result && value;
+        }
+
+        return result;
+    }
+}
