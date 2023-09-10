@@ -1,0 +1,71 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class DNAComputing {
+
+    public static void main(String[] args) {
+        // Define the 3-SAT problem instance
+        List<String> clauses = new ArrayList<>();
+        clauses.add("(A || B || C)");
+        clauses.add("(~A || ~B || D)");
+        clauses.add("(~C || D || E)");
+
+        // Generate random DNA sequences as potential solutions
+        List<String> dnaSequences = generateRandomDNASequences(100);
+
+        // Iterate through DNA sequences and check if they satisfy the 3-SAT problem
+        for (String dna : dnaSequences) {
+            if (satisfies3SAT(dna, clauses)) {
+                System.out.println("Solution found: " + dna);
+                break;
+            }
+        }
+    }
+
+    // Function to generate random DNA sequences
+    public static List<String> generateRandomDNASequences(int count) {
+        List<String> sequences = new ArrayList<>();
+        String nucleotides = "ACGT";
+
+        for (int i = 0; i < count; i++) {
+            StringBuilder sequence = new StringBuilder();
+            for (int j = 0; j < 10; j++) { // Assume a DNA sequence length of 10 for simplicity
+                int randomIndex = (int) (Math.random() * nucleotides.length());
+                sequence.append(nucleotides.charAt(randomIndex));
+            }
+            sequences.add(sequence.toString());
+        }
+
+        return sequences;
+    }
+
+    // Function to check if a DNA sequence satisfies the 3-SAT problem
+    public static boolean satisfies3SAT(String dna, List<String> clauses) {
+        for (String clause : clauses) {
+            String[] literals = clause.replaceAll("[()]", "").split("\\|\\|");
+            boolean clauseSatisfied = false;
+
+            for (String literal : literals) {
+                char variable = literal.charAt(0);
+                boolean isNegated = literal.charAt(1) == '~';
+
+                boolean variableValue = dna.charAt(variable - 'A') == '1'; // Assume '1' represents true
+
+                if (isNegated) {
+                    variableValue = !variableValue;
+                }
+
+                if (variableValue) {
+                    clauseSatisfied = true;
+                    break;
+                }
+            }
+
+            if (!clauseSatisfied) {
+                return false; // The clause is not satisfied by the DNA sequence
+            }
+        }
+
+        return true; // All clauses are satisfied by the DNA sequence
+    }
+}
