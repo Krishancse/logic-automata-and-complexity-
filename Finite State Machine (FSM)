@@ -1,0 +1,72 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class FiniteStateMachine {
+    private final Map<StateTransition, State> transitionTable;
+    private State currentState;
+
+    public FiniteStateMachine() {
+        this.transitionTable = new HashMap<>();
+        this.currentState = State.START;
+
+        // Define transitions in the transition table
+        transitionTable.put(new StateTransition(State.START, 'a'), State.A);
+        transitionTable.put(new StateTransition(State.A, 'b'), State.B);
+        transitionTable.put(new StateTransition(State.B, 'c'), State.ACCEPT);
+    }
+
+    public boolean process(String input) {
+        for (char symbol : input.toCharArray()) {
+            State nextState = getNextState(currentState, symbol);
+            if (nextState == null) {
+                return false; // Invalid transition
+            }
+            currentState = nextState;
+        }
+        return currentState == State.ACCEPT; // Check if we reached the accept state
+    }
+
+    private State getNextState(State currentState, char symbol) {
+        return transitionTable.get(new StateTransition(currentState, symbol));
+    }
+
+    public static void main(String[] args) {
+        FiniteStateMachine fsm = new FiniteStateMachine();
+        String input1 = "abc";
+        String input2 = "ab";
+        String input3 = "abcc";
+
+        System.out.println("Input: " + input1 + ", Recognized: " + fsm.process(input1));
+        System.out.println("Input: " + input2 + ", Recognized: " + fsm.process(input2));
+        System.out.println("Input: " + input3 + ", Recognized: " + fsm.process(input3));
+    }
+
+    // Enum to represent the FSM states
+    private enum State {
+        START, A, B, ACCEPT
+    }
+
+    // Class to represent state transitions
+    private static class StateTransition {
+        private final State fromState;
+        private final char symbol;
+
+        StateTransition(State fromState, char symbol) {
+            this.fromState = fromState;
+            this.symbol = symbol;
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * fromState.hashCode() + symbol;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            StateTransition that = (StateTransition) obj;
+            return fromState == that.fromState && symbol == that.symbol;
+        }
+    }
+}
