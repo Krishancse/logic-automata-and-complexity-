@@ -1,0 +1,38 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+def plot_time_complexity(algorithm_name, input_sizes, execution_times):
+    plt.figure(figsize=(8, 6))
+    plt.plot(input_sizes, execution_times, marker='o', linestyle='-')
+    plt.title(f'Time Complexity Analysis: {algorithm_name}')
+    plt.xlabel('Input Size')
+    plt.ylabel('Execution Time (milliseconds)')
+    plt.grid(True)
+    plt.show()
+
+def plot_space_complexity(algorithm_name, input_sizes, space_complexities):
+    plt.figure(figsize=(8, 6))
+    plt.plot(input_sizes, space_complexities, marker='o', linestyle='-')
+    plt.title(f'Space Complexity Analysis: {algorithm_name}')
+    plt.xlabel('Input Size')
+    plt.ylabel('Space Complexity (bytes)')
+    plt.grid(True)
+    plt.show()
+
+def main():
+    print("Complexity-Related Visualizations")
+
+    # Example data (replace with your own data)
+    algorithm_name = "Sample Algorithm"
+    input_sizes = [1, 10, 100, 1000]
+    execution_times = [1, 15, 200, 3000]
+    space_complexities = [100, 200, 400, 8000]
+
+    # Plot time complexity
+    plot_time_complexity(algorithm_name, input_sizes, execution_times)
+
+    # Plot space complexity
+    plot_space_complexity(algorithm_name, input_sizes, space_complexities)
+
+if __name__ == "__main__":
+    main()
