@@ -1,0 +1,129 @@
+Research Project Title: "Advancements in Automata and Language Theory: Theory and Practical Applications with Python"
+
+**Project Overview:**
+
+The project aims to investigate advancements in automata and language theory and bridge the gap between theoretical concepts and practical applications using Python programming. Automata theory plays a vital role in computer science, linguistics, and artificial intelligence, and this research project will contribute to both theoretical developments and the implementation of automata-based solutions.
+
+**Research Objectives:**
+
+1. **New Automata Models in Python**: Develop Python libraries to create and manipulate new automata models, such as quantum automata or probabilistic automata, and explore their computational power.
+
+2. **Natural Language Processing (NLP)**: Utilize automata and formal language theory to enhance NLP applications, including tokenization, parsing, and sentiment analysis, with Python-based implementations.
+
+3. **Automata-Based Compilers**: Design and implement a compiler using automata theory concepts, providing a real-world application of automata in software development.
+
+4. **Automata Visualization Tools**: Create Python-based tools for visualizing automata and grammars, aiding in both education and research.
+
+5. **Quantum Automata Simulation**: Develop Python scripts for simulating quantum automata, demonstrating their capabilities in quantum computing and cryptography.
+
+6. **Complexity Analysis with Python**: Use Python to analyze the time and space complexity of automata algorithms, contributing to complexity theory.
+
+**Methodology:**
+
+- Develop Python libraries and modules for creating and manipulating automata, grammars, and languages.
+
+- Implement automata-based solutions in Python for practical applications, such as NLP, compilers, and formal verification.
+
+- Create Python scripts for visualizing automata, grammars, and parsing trees using libraries like Matplotlib.
+
+- Investigate quantum automata and implement quantum simulations using Python's quantum computing libraries (e.g., Qiskit).
+
+- Conduct complexity analysis using Python to assess the efficiency of automata-based algorithms.
+
+**Expected Outcomes:**
+
+1. Python libraries for automata modeling and manipulation, providing a practical toolkit for researchers and developers.
+
+2. Enhanced NLP tools and libraries that leverage automata and formal language theory.
+
+3. A functional compiler implemented using automata-based techniques in Python.
+
+4. Visualization tools in Python for teaching and research purposes.
+
+5. Python-based quantum automata simulations, highlighting their relevance in quantum computing.
+
+6. Complexity analysis scripts and insights into the relationship between automata and complexity theory.
+
+**Impact:**
+
+- The Python libraries and tools developed during this project will facilitate research in automata and language theory, making it more accessible to the broader scientific community.
+
+- Practical applications in NLP and compiler construction will have a tangible impact on software development and linguistic research.
+
+- Python-based quantum automata simulations will contribute to advancements in quantum computing and cryptography.
+
+- Complexity analysis in Python will provide valuable insights into algorithm efficiency and complexity theory.
+
+**Note:** The research project described above provides a high-level overview. Specific research questions, Python libraries, and practical implementations would need to be further defined and developed based on the expertise and interests of the research team. Collaboration with experts in relevant fields is encouraged to maximize the project's impact.
+import re
+
+class EmailValidator:
+    def __init__(self):
+        # Define the states
+        self.states = {'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'}
+        
+        # Define the alphabet (letters, digits, '.', '_', '@', and '-')
+        self.alphabet = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._@-")
+        
+        # Define the transition function
+        self.transition = {
+            'q0': {'a-zA-Z': 'q1', '0-9': 'q1', '_': 'q1'},
+            'q1': {'a-zA-Z': 'q1', '0-9': 'q1', '_': 'q1', '.': 'q2', '@': 'q4', '-': 'q3'},
+            'q2': {'a-zA-Z': 'q3'},
+            'q3': {'a-zA-Z': 'q3', '@': 'q4'},
+            'q4': {'a-zA-Z': 'q5', '-': 'q6'},
+            'q5': {'a-zA-Z': 'q5', '.': 'q6'},
+            'q6': {'a-zA-Z': 'q7'},
+            'q7': {'a-zA-Z': 'q7'},
+        }
+        
+        # Define the initial state
+        self.initial_state = 'q0'
+        
+        # Define the set of accepting states
+        self.accepting_states = {'q5', 'q7'}
+    
+    def is_accepted(self, input_string):
+        current_state = self.initial_state
+        
+        for symbol in input_string:
+            if symbol not in self.alphabet:
+                return False
+            
+            # Define character class for transitions (a-zA-Z, 0-9)
+            char_class = 'a-zA-Z' if symbol.isalpha() else '0-9'
+            
+            if char_class in self.transition[current_state]:
+                current_state = self.transition[current_state][char_class]
+            else:
+                return False
+        
+        return current_state in self.accepting_states
+
+# Create an email validator automaton
+email_validator = EmailValidator()
+
+# Test the email validator with input strings
+email_addresses = [
+    "john.doe@example.com",
+    "user_name@my-domain.com",
+    "invalid.email@invalid@domain.com",
+    "missingat.com",
+    "invalid@missingdot",
+    "name@-invalid-domain.com",
+    "name@valid-domain.com"
+]
+
+for email in email_addresses:
+    if email_validator.is_accepted(email):
+        print(f"'{email}' is a valid email address")
+    else:
+        print(f"'{email}' is not a valid email address")
+
+# Using a Regular Expression for Email Validation
+print("\nUsing Regular Expressions:")
+for email in email_addresses:
+    if re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$', email):
+        print(f"'{email}' is a valid email address")
+    else:
+        print(f"'{email}' is not a valid email address")
